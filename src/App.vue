@@ -1,26 +1,41 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="news" v-for="result in results" :key="result">
+    <Card :results="result" />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import axios from 'axios'
+import Card from '@/components/Card.vue'
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Card,
+  },
+    data(){
+    return {
+      results: null,
+    }
+  },
+  methods: {
+   async fetchApi(){
+      let data = await axios.get('https://newsdata.io/api/1/news?apikey=pub_5012a488556afe12029555864de00d943eb1&q=cryptocurrency');
+      this.results= data.data.results;
+    console.log("Newz",data.data.results[0].title)
+
+    }
+  },
+
+  mounted(){
+    this.fetchApi();
   }
+
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+#news{
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
